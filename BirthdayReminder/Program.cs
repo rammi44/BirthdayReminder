@@ -54,9 +54,10 @@ namespace BirthdayReminder
                     Console.WriteLine("sent email to {0}", emp.Name);
                 });
 
-                Console.WriteLine("Close Birthday reminder app!");
-
                 DisposeServices();
+
+                Console.WriteLine("Close Birthday reminder app!");
+                Console.Read();
             }
             catch (Exception ex)
             {
