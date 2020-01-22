@@ -57,18 +57,18 @@ namespace BirthdayReminder
                 DisposeServices();
 
                 Console.WriteLine("Close Birthday reminder app!");
-                Console.Read();
             }
             catch (Exception ex)
             {
+                ex.LogError(appConfig.LogFilePath);
                 if (appConfig.IsAlertEmailEnabled && (ex.GetType() != typeof(ValidationException) || ex.GetType() == typeof(EmailSendingException)))
                 {
-                    alertService.SendEmail(emailConfig, Common.ErrorMailSubject, ex.Message, appConfig.AlertMailId, Common.AdminName, null, null, null);
+                    alertService.SendMailUsingSendGrid(emailConfig, Common.ErrorMailSubject, ex.Message, appConfig.AlertMailId, Common.AdminName, null, null, null);
                 }
-                ex.LogError(appConfig.LogFilePath);
-
                 DisposeServices();
             }
+
+            Console.Read();
         }
 
         private static void RegisterServices()

@@ -31,10 +31,18 @@ namespace BirthdayReminder.Services
             if (!File.Exists(Path.Combine(appConfiguration.ExcelPath, appConfiguration.ExcelName)))
                 throw new ExcelNotFoundException(Path.Combine(appConfiguration.ExcelPath, appConfiguration.ExcelName));
 
-            var employees = new ExcelMapper(Path.Combine(appConfiguration.ExcelPath, appConfiguration.ExcelName)).Fetch<EmployeeEntity>()
-          .Where(emp => emp.DOB.Date == DateTime.Now.Date && emp.DOB.Month == DateTime.Now.Month && !appConfiguration.ExcludeEmailIds.Contains(emp.Email)).ToList();
+            try
+            {
+                var employees = new ExcelMapper(Path.Combine(appConfiguration.ExcelPath, appConfiguration.ExcelName)).Fetch<EmployeeEntity>()
+      .Where(emp => emp.DOB.Date == DateTime.Now.Date && emp.DOB.Month == DateTime.Now.Month && !appConfiguration.ExcludeEmailIds.Contains(emp.Email)).ToList();
 
-            return employees;
+                return employees;
+            }
+            catch (Exception ex)
+            {
+                throw new ExcelDataValidationException(ex.Message);
+            }
+
         }
     }
 }
